@@ -1,0 +1,65 @@
+// Shopping Cart Functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const cart = [];
+    const cartCount = document.querySelector('.cart-count');
+    const cartItemsContainer = document.querySelector('.cart-items');
+    const cartTotalAmount = document.getElementById('cart-total-amount');
+    const cartModal = document.getElementById('cart-modal');
+    const cartBtn = document.querySelector('a[href="#cart"]');
+    const closeCartBtn = document.querySelector('.close-cart');
+    const addToCartBtns = document.querySelectorAll('.add-to-cart');
+
+    // Sample product data (in a real app, this would come from a database)
+    const products = {
+        1: { id: 1, name: 'Premium Product 1', price: 99.99, image: 'https://via.placeholder.com/300' },
+        2: { id: 2, name: 'Premium Product 2', price: 129.99, image: 'https://via.placeholder.com/300' },
+        3: { id: 3, name: 'Premium Product 3', price: 79.99, image: 'https://via.placeholder.com/300' },
+        4: { id: 4, name: 'Premium Product 4', price: 149.99, image: 'https://via.placeholder.com/300' }
+    };
+
+    // Add to cart functionality
+    addToCartBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const productId = parseInt(this.getAttribute('data-id'));
+            addToCart(productId);
+        });
+    });
+
+    function addToCart(productId) {
+        const product = products[productId];
+        
+        // Check if product is already in cart
+        const existingItem = cart.find(item => item.id === productId);
+        
+        if (existingItem) {
+            existingItem.quantity += 1;
+        } else {
+            cart.push({
+                id: product.id,
+                name: product.name,
+                price: product.price,
+                image: product.image,
+                quantity: 1
+            });
+        }
+        
+        updateCart();
+    }
+
+    function updateCart() {
+        // Update cart count
+        const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+        cartCount.textContent = totalItems;
+        
+        // Update cart modal
+        renderCartItems();
+        
+        // Update total amount
+        const totalAmount = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+        cartTotalAmount.textContent = totalAmount.toFixed(2);
+    }
+
+    function renderCartItems() {
+        cartItemsContainer.innerHTML = '';
+        
+        if (cart.length
